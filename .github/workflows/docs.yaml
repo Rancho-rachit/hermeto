@@ -2,6 +2,9 @@
 
 name: Publish documentation
 on:
+  push:
+    branches:
+      - main
   release:
     types: [published]
 
@@ -13,6 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - name: Configure Git Credentials
         run: |
           git config user.name github-actions[bot]
@@ -26,5 +31,12 @@ jobs:
           key: mkdocs-material-${{ env.cache_id }}
           path: .cache
           restore-keys: mkdocs-material-
-      - run: pip install mkdocs-material
-      - run: mkdocs gh-deploy --force --strict
+      - run: pip install mkdocs-material mike
+      - name: Deploy dev documentation
+        if: github.event_name == 'push'
+        run: mike deploy --push dev
+      - name: Deploy release documentation
+        if: github.event_name == 'release'
+        run: |
+          mike deploy --push --update-aliases ${{ github.event.release.tag_name }} latest
+          mike set-default --push latest
