@@ -5,6 +5,8 @@
 Hermeto is a CLI tool that pre-fetches your project's dependencies to aid in
 making your build process [hermetic][].
 
+> **Note:** This is a test change to verify the documentation deployment pipeline.
+
 To see if we support your package manager(s), please check the
 [package managers](#package-managers) section.
 
