@@ -19,7 +19,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
     
     
       
@@ -681,10 +681,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#go-121-since-v050" class="md-nav__link">
+  <a href="#go-121" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Go 1.21+ (since v0.5.0)
+        Go 1.21+
       
     </span>
   </a>
@@ -1113,10 +1113,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#go-121-since-v050" class="md-nav__link">
+  <a href="#go-121" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Go 1.21+ (since v0.5.0)
+        Go 1.21+
       
     </span>
   </a>
@@ -1241,7 +1241,7 @@
 <li><a href="#gomod-flags">gomod flags</a></li>
 <li><a href="#vendoring">Vendoring</a></li>
 <li><a href="#understanding-reported-dependencies">Understanding reported dependencies</a></li>
-<li><a href="#go-121-since-v050">Go 1.21+</a></li>
+<li><a href="#go-121">Go 1.21+</a></li>
 <li><a href="#example">Full example walkthrough</a></li>
 </ul>
 <h2 id="specifying-modules-to-process">Specifying modules <sup id="fnref:modules"><a class="footnote-ref" href="#fn:modules">1</a></sup> to process<a class="headerlink" href="#specifying-modules-to-process" title="Permanent link">&para;</a></h2>
@@ -1410,12 +1410,12 @@ incomplete<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup>.</p
 fail.</p>
 <p>Please make sure to keep your go.sum file up to date, perhaps by incorporating
 the <code>go mod tidy</code> command in your dev workflow.</p>
-<h3 id="go-121-since-v050">Go 1.21+ <em>(since v0.5.0)</em><a class="headerlink" href="#go-121-since-v050" title="Permanent link">&para;</a></h3>
+<h3 id="go-121">Go 1.21+<a class="headerlink" href="#go-121" title="Permanent link">&para;</a></h3>
 <p>Starting with <a href="https://tip.golang.org/doc/go1.21">Go 1.21</a>, Go changed the meaning of the <code>go 1.X</code> directive in
 that it now specifies the <a href="https://go.dev/ref/mod#go-mod-file-go">minimum required version</a> of Go rather than a
 suggested version as it originally did. The format of the version string in the
 <code>go</code> directive now also includes the micro release and if you don't include the
-micro release in your <code>go.qmod</code> file yourself (i.e. you only specify the
+micro release in your <code>go.mod</code> file yourself (i.e. you only specify the
 language release) Go will try to correct it automatically inside the file. Last
 but not least, Go 1.21 also introduced a new keyword
 <a href="https://go.dev/ref/mod#go-mod-file-toolchain"><code>toolchain</code></a> to the
@@ -1423,13 +1423,12 @@ but not least, Go 1.21 also introduced a new keyword
 be able to process your <code>go.mod</code> file with an older version of Go (and hence
 older hermeto) as you could in the past for various reasons. Many projects bump
 their required Go toolchain's micro release as soon as it becomes available
-upstream (i.e. not waiting for distributions to bundle them properly). This
-caused problems in version <em>v0.5.0</em> because the container image's version simply
-may not have been high enough to process a given project's <code>go.mod</code> file.
-Therefore, version <em>v0.7.0</em> introduced a mechanism to always rely on the origin
-0th release of a toolchain (e.g. 1.21.0) and use the <code>GOTOOLCHAIN=auto</code> setting
-to instruct Go to fetch any toolchain as specified by the <code>go.mod</code> file
-automatically, hence allowing us to keep up with frequent micro version bumps.
+upstream (i.e. not waiting for distributions to bundle them properly).</p>
+<p>To handle this, Hermeto's container image includes the latest official upstream
+Go toolchain, which is kept up to date via dependabot. Hermeto
+configures <code>GOTOOLCHAIN=auto</code> so that if the <code>go.mod</code> requires a toolchain
+version newer than the one pre-installed, Go can automatically fetch a
+matching one.
 <strong>Note that such a language version would still need to be officially marked as
 supported by hermeto, i.e. we'd not allow Go to fetch e.g. a 1.22 toolchain if
 the maximum supported Go version by hermeto were 1.21!</strong></p>
